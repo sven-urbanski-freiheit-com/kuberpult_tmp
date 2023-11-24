@@ -1,42 +1,64 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base",
     ":dependencyDashboard"
   ],
-  "platform": "github",
-  "endpoint": "https://github.com/freiheit-com/kuberpult",
-  "repositories": [
-    "freiheit-com/kuberpult"
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "enabledManagers": [
+    "gomod",
+    "npm",
+    "terraform",
+    "helmv3",
+    "helm-values",
+    "regex"
   ],
-  "ignorePaths": [
-    ".github/**"
+  "baseBranches": [
+    "main"
   ],
-  "packageRules": [
-    {
-      "description": "Separate Major and Minor versions' PRs for packages in go.mod",
-      "matchPaths": [
-        "go.mod"
-      ],
-      "separateMajorMinor": "true",
-      "excludePackagePatterns": [
-        "github.com/freiheit-com/kuberpult/.*"
-      ]
-    }
-  ],
-  "constraints": {
-    "go": "1.19.5"
+  "npm": {
+    groupName: "npm",
+    "extends": [
+      "helpers:disableTypesNodeMajor",
+      "config:js-app"
+    ],
+    "postUpdateOptions": ["npmDedupe"],
+    "packageRules": [
+      {
+        "matchPackageNames": [
+          "history",
+          "sass",
+          "jest",
+          "babel-jest",
+          "@types/jest",
+          "sass-loader",
+          "css-loader",
+          "style-loader"
+        ],
+        "enabled": false
+      },
+      {
+        // disabling all material deps
+        "matchPackagePatterns": [
+          "^@material/"
+        ],
+        "enabled": false
+      }
+    ]
   },
-  "prConcurrentLimit": 25,
-  "prHourlyLimit": 0,
-  "labels": [
-    "renovate"
-  ],
-  "postUpdateOptions": [
-    "gomodUpdateImportPaths",
-    "gomodTidy"
-  ],
-  "schedule": [
-    "at any time"
-  ]
+  "gomod": {
+    groupName: "go",
+    "packageRules": [
+      {
+        "matchPackagePrefixes": [
+          "cloud.google.com/go/"
+        ],
+        "groupName": "google cloud go"
+      }
+    ]
+  },
+  "npmrc": "",
+  "dependencyDashboardLabels": ["renovate"],
+  "labels": ["renovate"],
+  "branchConcurrentLimit": 20,
+  "prConcurrentLimit": 20,
+  "prHourlyLimit": 5
 }
