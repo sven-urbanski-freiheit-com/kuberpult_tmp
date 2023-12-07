@@ -60,5 +60,6 @@
   "labels": ["renovate"],
   "branchConcurrentLimit": 20,
   "prConcurrentLimit": 20,
-  "prHourlyLimit": 5
+  "prHourlyLimit": 5,
+  "recreateClosed": true
 }
